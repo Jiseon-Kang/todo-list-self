@@ -12,6 +12,7 @@ function App() {
         setTodo("")
         axios.post('/todo', {content: todo})
     }
+
     const getTodo = async () => {
         const response = await axios.get('/todo')
         const todoArray = response.data
