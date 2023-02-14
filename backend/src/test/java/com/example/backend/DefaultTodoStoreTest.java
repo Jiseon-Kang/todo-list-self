@@ -1,19 +1,15 @@
 package com.example.backend;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.FluentQuery;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 @DataJpaTest
 class DefaultTodoStoreTest {
 
@@ -26,8 +22,25 @@ class DefaultTodoStoreTest {
         todoEntity.setContent("Hello World-2");
         todoRepository.save(todoEntity);
         TodoStore todoStore = new DefaultTodoStore(todoRepository);
-        todoStore.getTodos();
 
 
+        List<Todo> todoList = todoStore.getTodos();
+
+
+        assertThat(todoList.get(0).getContent(),equalTo("Hello World-2"));
+    }
+
+    @Test
+    void addTodo() {
+        Todo todo = new Todo();
+        todo.setContent("qwer");
+        TodoStore todoStore = new DefaultTodoStore(todoRepository);
+
+
+        todoStore.addTodo(todo);
+
+
+        List<TodoEntity> todoEntityList = todoRepository.findAll();
+        assertThat(todoEntityList.get(0).getContent(),equalTo("qwer"));
     }
 }

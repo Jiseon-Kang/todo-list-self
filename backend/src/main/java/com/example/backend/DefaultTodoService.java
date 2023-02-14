@@ -1,7 +1,9 @@
 package com.example.backend;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+@Service
 public class DefaultTodoService implements TodoService {
     TodoStore todoStore;
     public DefaultTodoService(TodoStore todoStore) {
@@ -11,5 +13,10 @@ public class DefaultTodoService implements TodoService {
     @Override
     public List<Todo> getTodos() {
         return todoStore.getTodos();
+    }
+
+    @Override
+    public void addTodo(Todo todo) {
+        todoStore.addTodo(todo);
     }
 }
