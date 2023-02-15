@@ -6,4 +6,7 @@ public interface TodoStore {
     List<Todo> getTodos();
 
     void addTodo(Todo todo);
+
+    void deleteTodo(Long id);
+
 }

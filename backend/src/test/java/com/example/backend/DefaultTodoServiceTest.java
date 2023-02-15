@@ -2,6 +2,7 @@ package com.example.backend;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.List;
@@ -27,6 +28,20 @@ class DefaultTodoServiceTest {
         assertThat(todos.size(), equalTo(1));
         assertThat(todos.get(0).getId(), equalTo("0002"));
         assertThat(todos.get(0).getContent(),equalTo("Hello World-2"));
+    }
+    @Test
+    void deleteTodo() {
+        TodoStore todoStore = Mockito.mock(TodoStore.class);
+        TodoService todoService = new DefaultTodoService(todoStore);
+
+
+        todoService.deleteTodo(1L);
+
+
+        ArgumentCaptor<Long> argumentCaptor = ArgumentCaptor.forClass(Long.class);
+        verify(todoStore).deleteTodo(argumentCaptor.capture());
+        Long result = argumentCaptor.getValue();
+        assertThat(result.longValue(),equalTo(1L));
     }
 
     @Test

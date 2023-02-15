@@ -32,4 +32,9 @@ public class DefaultTodoStore implements TodoStore {
         todoEntity.setContent(todo.getContent());
         todoRepository.save(todoEntity);
     }
+
+    @Override
+    public void deleteTodo(Long id) {
+        todoRepository.deleteById(id);
+    }
 }

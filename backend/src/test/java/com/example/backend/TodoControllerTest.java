@@ -26,10 +26,26 @@ class TodoControllerTest {
 
         MockMvc sut = MockMvcBuilders.standaloneSetup(new TodoController(todoService)).build();
 
-
         sut.perform(MockMvcRequestBuilders.get("/todo")).andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value("0002")).andExpect(jsonPath("$[0].content").value("Hello World-2"));
     }
+    @Test
+    void deleteTodos() throws Exception {
+        TodoService todoService = Mockito.mock(TodoService.class);
+        MockMvc sut = MockMvcBuilders.standaloneSetup(new TodoController(todoService)).build();
 
+
+        sut.perform(MockMvcRequestBuilders.delete("/todo/1"));
+
+
+        ArgumentCaptor<Long> argumentCaptor = ArgumentCaptor.forClass(Long.class);
+        verify(todoService).deleteTodo(argumentCaptor.capture());
+        Long result = argumentCaptor.getValue();
+        assertThat(result.longValue(), equalTo(1L));
+
+    }
+
+
+    @Test
     void addTodo() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         Todo todo = new Todo();
@@ -51,4 +67,6 @@ class TodoControllerTest {
 
         assertThat(result.getContent(), equalTo("Hello World-2"));
     }
+
+
 }

@@ -31,6 +31,21 @@ class DefaultTodoStoreTest {
     }
 
     @Test
+    void deleteTodo() {//given
+        TodoEntity todoEntity = new TodoEntity();
+        todoEntity.setId(1l);
+        todoRepository.save(todoEntity);//저장된게 있어야
+        TodoStore todoStore = new DefaultTodoStore(todoRepository);
+
+        todoStore.deleteTodo(1l);//action
+
+        List<TodoEntity> todoEntityList = todoRepository.findAll();
+        assertThat(todoEntityList.size(),equalTo(0));
+
+    }
+
+
+    @Test
     void addTodo() {
         Todo todo = new Todo();
         todo.setContent("qwer");

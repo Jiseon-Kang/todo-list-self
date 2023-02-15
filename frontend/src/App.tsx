@@ -7,17 +7,16 @@ function App() {
     const [todoList, setTodoList] = useState<{id: string, content: string}[]>([]);
     const [todo, setTodo] = useState<string>('');
 
-    const addTodo = () => {
-        setTodoList([...todoList, todo])
+    const addTodo = async () => {
+        await axios.post('/todo', {content: todo})
         setTodo("")
-        axios.post('/todo', {content: todo})
+        getTodo()
     }
 
     const getTodo = async () => {
         const response = await axios.get('/todo')
         const todoArray = response.data
-        const result = todoArray.map((item: any) => item.content)
-        setTodoList(result)
+        setTodoList(todoArray)
     }
 
     const deleteTodo = async (id: string) =>{

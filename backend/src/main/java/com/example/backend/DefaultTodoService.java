@@ -19,4 +19,10 @@ public class DefaultTodoService implements TodoService {
     public void addTodo(Todo todo) {
         todoStore.addTodo(todo);
     }
+
+    @Override
+    public void deleteTodo(Long id) {
+        todoStore.deleteTodo(id);
+    }
+
 }
