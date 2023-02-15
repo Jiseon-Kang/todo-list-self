@@ -4,7 +4,7 @@ import axios from "axios"
 
 function App() {
 
-    const [todoList, setTodoList] = useState<string[]>([]);
+    const [todoList, setTodoList] = useState<{id: string, content: string}[]>([]);
     const [todo, setTodo] = useState<string>('');
 
     const addTodo = () => {
@@ -17,6 +17,14 @@ function App() {
         const response = await axios.get('/todo')
         const todoArray = response.data
         const result = todoArray.map((item: any) => item.content)
+        setTodoList(result)
+    }
+
+    const deleteTodo = async (id: string) =>{
+        axios.delete(`/todo/${id}`)
+        const result = todoList.filter((todo) => {
+            return todo.id !== id
+        })
         setTodoList(result)
     }
 
@@ -44,10 +52,17 @@ function App() {
                 확인
             </button>
             {todoList.map((todo, index) => {
-                return <div key={index}>{todo}</div>
+                return <div key={index}>
+                    <div>{todo.content}</div>
+                    <button onClick={() => {
+                        deleteTodo(todo.id)
+                    }}>
+                    삭제
+                    </button>
+                </div>
             })}
         </div>
     );
 }
 
-export default App;
+    export default App;
