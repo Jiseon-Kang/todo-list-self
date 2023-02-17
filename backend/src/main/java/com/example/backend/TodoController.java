@@ -1,10 +1,9 @@
 package com.example.backend;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -28,8 +27,19 @@ public class TodoController {
     }
 
     @PostMapping("/todo")
-    public void addTodo(@RequestBody Todo todo){
-        todoService.addTodo(todo);
+    public void addTodo(@RequestBody Todo todo){todoService.addTodo(todo);}
+
+    @DeleteMapping("/todo/{id}")
+    public void deleteTodo(@PathVariable String id) {
+        todoService.deleteTodo(Long.parseLong(id));
     }
 
-}
+    @PutMapping("/todo/{id}")
+    public void updateTodo(@PathVariable String id, @RequestBody HashMap<String, String> content){//{"content":todoUpdate}
+        Todo todo = new Todo();
+        todo.setContent(content.get("content"));
+        todo.setId(id);
+        todoService.updateTodo(todo);
+
+    }
+    }

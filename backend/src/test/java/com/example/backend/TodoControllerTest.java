@@ -1,8 +1,10 @@
 package com.example.backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.xml.bind.v2.TODO;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,10 +28,45 @@ class TodoControllerTest {
 
         MockMvc sut = MockMvcBuilders.standaloneSetup(new TodoController(todoService)).build();
 
-
         sut.perform(MockMvcRequestBuilders.get("/todo")).andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value("0002")).andExpect(jsonPath("$[0].content").value("Hello World-2"));
     }
+    @Test
+    void deleteTodos() throws Exception {
+        TodoService todoService = Mockito.mock(TodoService.class);
+        MockMvc sut = MockMvcBuilders.standaloneSetup(new TodoController(todoService)).build();
 
+
+        sut.perform(MockMvcRequestBuilders.delete("/todo/1"));
+
+
+        ArgumentCaptor<Long> argumentCaptor = ArgumentCaptor.forClass(Long.class);
+        verify(todoService).deleteTodo(argumentCaptor.capture());
+        Long result = argumentCaptor.getValue();
+        assertThat(result.longValue(), equalTo(1L));
+    }
+
+    @Test
+    void updateTodo() throws Exception {
+        String jsonContent = "HelloWorldHi";
+        TodoService todoService = Mockito.mock(TodoService.class);
+        MockMvc sut = MockMvcBuilders.standaloneSetup(new TodoController(todoService)).build();
+
+
+        sut.perform(MockMvcRequestBuilders.put("/todo/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonContent));
+
+
+        ArgumentCaptor<Todo> argumentCaptor = ArgumentCaptor.forClass(Todo.class);
+        verify(todoService).updateTodo(argumentCaptor.capture());
+        Todo result = argumentCaptor.getValue();
+
+
+        assertThat(result.getId(), equalTo("1"));
+        assertThat(result.getContent(), equalTo("HelloWorldHi"));
+    }
+
+    @Test
     void addTodo() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         Todo todo = new Todo();
@@ -51,4 +88,6 @@ class TodoControllerTest {
 
         assertThat(result.getContent(), equalTo("Hello World-2"));
     }
+
+
 }
