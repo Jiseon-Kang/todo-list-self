@@ -12,7 +12,7 @@ describe('App Tests', () => {
         jest.spyOn(axios, 'get').mockResolvedValue({data: []})
     });
 
-    test('화면에 텍스트박스와 버튼이 보인다', async () => {
+    test('화면에 텍스트박스와 확인 버튼이 보인다', async () => {
         await act(() => render(<App/>))
 
         expect(screen.getByRole("textbox")).toBeInTheDocument()
@@ -42,6 +42,18 @@ describe('App Tests', () => {
             expect(spy).toHaveBeenCalledWith('/todo/1')
         }
     )
+    test('서버에 저장되었던 데이터의 변경 버튼을 누르면 텍스트박스 형식으로 변경된다.',async () => {
+        jest.spyOn(axios,'get').mockResolvedValue({data: [{id:'1',content:'Hello World'}]})
+
+        await waitFor(() => render(<App/>))
+        await waitFor(()=> expect(screen.getByText('Hello World')).toBeInTheDocument())
+
+        await userEvent.click(screen.getAllByRole("button",{name:'변경'})[0])
+
+        expect(await screen.getAllByRole("textbox")[1]).toHaveValue('Hello World')//텍스트박스에 입력했던 값이 보인다.
+
+    })
+
 
     describe('Add Todo Tests', () => {
 
@@ -78,5 +90,7 @@ describe('App Tests', () => {
 
             expect(screen.getByText("hi")).toBeInTheDocument()
         })
+
+
     })
 })

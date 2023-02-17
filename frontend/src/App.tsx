@@ -6,6 +6,7 @@ function App() {
 
     const [todoList, setTodoList] = useState<{id: string, content: string}[]>([]);
     const [todo, setTodo] = useState<string>('');
+    const [editId, setEditId] = useState<string>();
 
     const addTodo = async () => {
         await axios.post('/todo', {content: todo})
@@ -53,6 +54,17 @@ function App() {
             {todoList.map((todo, index) => {
                 return <div key={index}>
                     <div>{todo.content}</div>
+                        <button onClick={() => {
+                            return <div>
+                                (if (EditID == todo.id){
+                                <input
+                                    value ={todo}
+                                    on
+                            })
+                            </div>
+                        }}>
+                        변경
+                    </button>
                     <button onClick={() => {
                         deleteTodo(todo.id)
                     }}>
