@@ -6,14 +6,13 @@ function App() {
 
     const [todoList, setTodoList] = useState<{ id: string, content: string }[]>([]);
     const [todo, setTodo] = useState<string>('');
-    const [editId, setEditId] = useState<string>();
-    const [todoUpdate,setTodoUpdate] = useState<string>();
+    const [editId, setEditId] = useState<string>('');
+    const [todoUpdate,setTodoUpdate] = useState<string>('');
 
 
     const addTodo = async () => {
-        await axios.post('/todo', {content: todo})
+        todo.length === 0 ? window.alert('빈칸안돼~~') : await axios.post('/todo', {content: todo})
         setTodo("")
-        getTodo()
     }
 
     const getTodo = async () => {
@@ -31,9 +30,9 @@ function App() {
     }
 
     const updateTodo = async (id: string) => {
-        await axios.put(`/todo/${id}`,{'content' : todoUpdate})
+        todoUpdate.length === 0 ? window.alert('빈칸안돼애애애') : await axios.put(`/todo/${id}`,{'content' : todoUpdate})
+
         setEditId("")
-        getTodo()
     }
 
     useEffect(() => {
