@@ -53,6 +53,19 @@ describe('App Tests', () => {
         expect(await screen.getAllByRole("textbox")[1]).toHaveValue('Hello World')//텍스트박스에 입력했던 값이 보인다.
 
     })
+    test('변경 텍스트박스에 값을 변경 후 수정버튼을 누르면 저장된다.',async () => {
+        jest.spyOn(axios,'get').mockResolvedValue({data:[{id:'1',content:'Hello World'}]})
+        const axiosPut = jest.spyOn(axios,'put').mockResolvedValue({})
+        await waitFor(() => render(<App/>))
+        await waitFor(() => expect(screen.getByText('Hello World')).toBeInTheDocument())
+        await userEvent.click(screen.getAllByRole("button",{name:'변경'})[0])
+        expect(await screen.getAllByRole("textbox")[1]).toHaveValue('Hello World')
+
+        await userEvent.type(screen.getAllByRole("textbox")[1],"Hi")
+        await userEvent.click(screen.getByRole("button",{name:'수정'}))
+
+        expect(axiosPut).toHaveBeenCalledWith('/todo/1',{content : "Hello WorldHi"})
+    })
 
 
     describe('Add Todo Tests', () => {

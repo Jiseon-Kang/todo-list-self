@@ -1,5 +1,6 @@
 package com.example.backend;
 
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -42,6 +43,25 @@ class DefaultTodoServiceTest {
         verify(todoStore).deleteTodo(argumentCaptor.capture());
         Long result = argumentCaptor.getValue();
         assertThat(result.longValue(),equalTo(1L));
+    }
+
+    @Test
+    void updateTodo() {
+        Todo todo = new Todo();
+        todo.setId("1");
+        todo.setContent("HelloWorldHi");
+        TodoStore todoStore = Mockito.mock(TodoStore.class);
+        TodoService todoService = new DefaultTodoService(todoStore);
+
+
+        todoService.updateTodo(todo);
+
+
+        ArgumentCaptor<Todo> argumentCaptor = ArgumentCaptor.forClass(Todo.class);
+        verify(todoStore).updateTodo(argumentCaptor.capture());
+        Todo result = argumentCaptor.getValue();
+        assertThat(result.getId(),equalTo("1"));
+        assertThat(result.getContent(),equalTo("HelloWorldHi"));
     }
 
     @Test

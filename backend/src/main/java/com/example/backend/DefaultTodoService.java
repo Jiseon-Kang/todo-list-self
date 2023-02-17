@@ -25,4 +25,9 @@ public class DefaultTodoService implements TodoService {
         todoStore.deleteTodo(id);
     }
 
+    @Override
+    public void updateTodo(Todo todo) {
+        todoStore.updateTodo(todo);
+    }
+
 }

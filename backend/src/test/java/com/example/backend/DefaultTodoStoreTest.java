@@ -44,6 +44,25 @@ class DefaultTodoStoreTest {
 
     }
 
+    @Test
+    void updateTodo(){
+        Todo todo = new Todo();
+        todo.setId("1");
+        todo.setContent("HelloWorldHi");
+
+        TodoEntity todoEntity = new TodoEntity();
+        todoEntity.setId(1L);
+        todoEntity.setContent("HelloWorld");
+        todoRepository.save(todoEntity);
+        TodoStore todoStore = new DefaultTodoStore(todoRepository);
+
+        todoStore.updateTodo(todo);
+
+        List<TodoEntity> todoEntityList = todoRepository.findAll();
+        assertThat(todoEntityList.get(0).getId(), equalTo(1L));
+        assertThat(todoEntityList.get(0).getContent(), equalTo("HelloWorldHi"));
+    }
+
 
     @Test
     void addTodo() {

@@ -4,9 +4,11 @@ import axios from "axios"
 
 function App() {
 
-    const [todoList, setTodoList] = useState<{id: string, content: string}[]>([]);
+    const [todoList, setTodoList] = useState<{ id: string, content: string }[]>([]);
     const [todo, setTodo] = useState<string>('');
     const [editId, setEditId] = useState<string>();
+    const [todoUpdate,setTodoUpdate] = useState<string>();
+
 
     const addTodo = async () => {
         await axios.post('/todo', {content: todo})
@@ -20,12 +22,18 @@ function App() {
         setTodoList(todoArray)
     }
 
-    const deleteTodo = async (id: string) =>{
-        axios.delete(`/todo/${id}`)
+    const deleteTodo = async (id: string) => {
+        await axios.delete(`/todo/${id}`)
         const result = todoList.filter((todo) => {
             return todo.id !== id
         })
         setTodoList(result)
+    }
+
+    const updateTodo = async (id: string) => {
+        await axios.put(`/todo/${id}`,{'content' : todoUpdate})
+        setEditId("")
+        getTodo()
     }
 
     useEffect(() => {
@@ -53,22 +61,38 @@ function App() {
             </button>
             {todoList.map((todo, index) => {
                 return <div key={index}>
-                    <div>{todo.content}</div>
+                    {editId === todo.id ? (<div>
+                        <input
+                        value={todoUpdate}
+                        onChange={(event) => {
+                            const value = event.target.value
+                            setTodoUpdate(value)
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                updateTodo(todo.id)
+                            }
+                        }}
+                    />
                         <button onClick={() => {
-                            return <div>
-                                (if (EditID == todo.id){
-                                <input
-                                    value ={todo}
-                                    on
-                            })
-                            </div>
+                            updateTodo(todo.id)
                         }}>
+                            수정
+                        </button>
+                    </div>) : (
+                        <div>
+                            {todo.content}
+                        </div>)}
+                    <button onClick={() => {
+                        setEditId(todo.id)
+                        setTodoUpdate(todo.content)
+                    }}>
                         변경
                     </button>
                     <button onClick={() => {
                         deleteTodo(todo.id)
                     }}>
-                    삭제
+                        삭제
                     </button>
                 </div>
             })}

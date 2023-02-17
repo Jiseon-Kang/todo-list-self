@@ -9,4 +9,5 @@ public interface TodoStore {
 
     void deleteTodo(Long id);
 
+    void updateTodo(Todo todo);
 }
